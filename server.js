@@ -1,42 +1,21 @@
-var express = require('express')
-var bodyParser = require('body-parser')
-var passport = require('passport')
-var session = require('express-session')
-var ejs = require('ejs')
-var morgan = require('morgan')
-const fileUpload = require('express-fileupload');
-var config = require('./config/server')
+'use strict'
 
-//Initialize Express
-var app = express()
-require('./core/passport')(passport)
-app.use(express.static('public'))
-app.set('view engine','ejs')
-app.use(morgan('tiny'))
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(fileUpload());
+const config = require('./config/server')
+const db = require('./models')
+const logger = require('./lib/logger')
+const { createApp } = require('./app')
 
-// Enable for Reverse proxy support
-// app.set('trust proxy', 1) 
-
-// Intialize Session
-app.use(session({
-  secret: 'keyboard cat',
-  resave: true,
-  saveUninitialized: true,
-  cookie: { secure: false }
-}))
-
-// Initialize Passport
-app.use(passport.initialize())
-app.use(passport.session())
-
-// Initialize express-flash
-app.use(require('express-flash')());
-
-// Routing
-app.use('/app',require('./routes/app')())
-app.use('/',require('./routes/main')(passport))
-
-// Start Server
-app.listen(config.port, config.listen)
+// The process only starts listening once the database is reachable, and exits
+// non-zero otherwise so the orchestrator restarts it.
+db.sequelize.authenticate()
+  .then(() => db.sequelize.sync())
+  .then(() => {
+    const server = createApp().listen(config.port, config.listen, () => {
+      logger.info('listening', { port: config.port })
+    })
+    process.on('SIGTERM', () => server.close(() => process.exit(0)))
+  })
+  .catch((err) => {
+    logger.error('could not start', { error: err.message })
+    process.exit(1)
+  })

@@ -1,36 +1,29 @@
 {
-  "name": "dvna",
-  "version": "0.0.1",
-  "description": "Damn Vulnerable NodeJS Application",
+  "name": "shopfloor",
+  "version": "0.4.0",
+  "description": "Small storefront: Express web app and API, with a Python worker for exports and imports",
   "main": "server.js",
-  "directories": {
-    "doc": "docs"
-  },
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node --test test/*.test.js"
   },
-  "author": "sns",
+  "engines": {
+    "node": ">=20"
+  },
   "license": "MIT",
   "dependencies": {
-    "bcrypt": "^1.0.3",
-    "csurf": "^1.9.0",
-    "ejs": "^2.5.7",
-    "express": "^4.16.2",
-    "express-fileupload": "^0.4.0",
+    "bcrypt": "^5.1.1",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "express-fileupload": "^1.5.1",
     "express-flash": "0.0.2",
-    "express-session": "^1.15.6",
-    "flash": "^1.1.0",
-    "libxmljs": "^0.19.1",
-    "mathjs": "3.10.1",
-    "md5": "^2.2.1",
-    "morgan": "^1.9.0",
-    "mysql2": "^1.4.2",
-    "node-serialize": "0.0.4",
-    "passport": "^0.4.0",
+    "express-session": "^1.18.1",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.11.3",
+    "passport": "^0.7.0",
     "passport-local": "^1.0.0",
-    "sequelize": "^4.13.10",
-    "winston": "^3.0.0",
-    "x-xss-protection": "^1.1.0"
+    "sequelize": "^6.37.4",
+    "winston": "^3.15.0"
   }
 }
